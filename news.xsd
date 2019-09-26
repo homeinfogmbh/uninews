@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  XSD für Nachrichten.
+
+  Maintainer: Richard Neumann <r dot neumann at homeinfo fullstop de>
+-->
+
+<xs:schema  xmlns="http://xml.homeinfo.de/schema/news"
+            xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0"
+            targetNamespace="http://xml.homeinfo.de/schema/news">
+
+    <xs:element name="news" type="News"/>
+
+
+    <xs:complexType name="News">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Liste von Nachrichtenartikeln.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="article" type="Article" minOccurs="0" maxOccurs="unbounded">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Die jeweiligen Nachrichtenartikel.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Article">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Ein Nachrichtenartikel.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="title" type="xs:string">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Titel des Artikels.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="subtitle" type="xs:string" minOccurs="0">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Untertitel.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="text" type="xs:string">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Nachrichtentext.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="source" type="xs:string" minOccurs="0">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Quellenangabe.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="published" type="xs:dateTime" minOccurs="0">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Datum und Uhrzeit der Veröffentlichung.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+            <xs:element name="image" type="Attachment" minOccurs="0">
+              <xs:annotation>
+                  <xs:documentation xml:lang="de">
+                      Titelbild.
+                  </xs:documentation>
+              </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="provider" type="Provider" use="required">
+          <xs:annotation>
+              <xs:documentation xml:lang="de">
+                  Datenbank-ID.
+              </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+
+    <xs:complexType name="Attachment">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Dateianhang.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:simpleContent>
+            <xs:extension base="xs:string">
+                <xs:attribute name="sha256sum" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            SHA-256 Prüfsumme.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="mimetype" type="xs:string" use="required">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            MIME Typ des Bildes.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+                <xs:attribute name="id" type="xs:positiveInteger">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            Datenbank-ID des Bildes.
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:attribute>
+          </xs:extension>
+      </xs:simpleContent>
+    </xs:complexType>
+
+
+    <xs:simpleType name="Provider">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                Verfügbare Nachrichtendienste.
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="HOMEINFO"/>
+            <xs:enumeration value="welt.de"/>
+            <xs:enumeration value="DPA"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
