@@ -2,7 +2,7 @@
 
 from functoolsplus import coerce
 
-from cmslib.orm.charts import NewsChart
+from cmslib.orm.charts import News
 from cmslib.presentation.deployment import Presentation
 
 
@@ -14,6 +14,6 @@ def get_deployment_providers(deployment):
     """Yields the providers for the respective deployment."""
 
     for chart in Presentation(deployment).charts:
-        if isinstance(chart, NewsChart):
+        if isinstance(chart, News):
             for provider in chart.providers:
                 yield provider.provider
