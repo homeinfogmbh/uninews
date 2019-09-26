@@ -1,11 +1,8 @@
 FILE_LIST = ./.installed_files.txt
 
-.PHONY: pull push clean generate-bindings install uninstall
+.PHONY: pull clean install uninstall
 
-default: | pull clean generate-bindings install
-
-generate-bindings:
-	@ pyxbgen -u news.xsd -m dom --module-prefix=newslib
+default: | pull clean install
 
 install:
 	@ ./setup.py install --record $(FILE_LIST)
@@ -18,6 +15,3 @@ clean:
 
 pull:
 	@ git pull
-
-push:
-	@ git push
