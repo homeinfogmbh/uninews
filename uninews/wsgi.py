@@ -91,8 +91,9 @@ def preview_deployment(deployment):
         if article_dom.image:
             sha256sums.add(article_dom.image.sha256sum)
 
-    headers = FileAccessToken.headers_for_sha256sums(sha256sums)
-    return XML(xml, headers=headers)
+    file_preview_token = FileAccessToken.token_for_sha256sums(sha256sums)
+    xml.file_preview_token = file_preview_token.hex
+    return XML(xml)
 
 
 APPLICATION.add_routes((
