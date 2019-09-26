@@ -4,16 +4,19 @@ from flask import request
 
 from his import CUSTOMER, authenticated, authorized, root, Application
 from mdb import Customer
-from previewlib import preview, DeploymentPreviewToken
-from wsgilib import JSON
-
+from newslib.dom import news
 from newslib.enumerations import Provider
+from newslib.filters import articles
 from newslib.messages import NO_CUSTOMER_SPECIFIED
 from newslib.messages import NO_SUCH_CUSTOMER
 from newslib.messages import CUSTOMER_PROVIDER_ADDED
 from newslib.messages import NO_SUCH_CUSTOMER_PROVIDER
 from newslib.messages import CUSTOMER_PROVIDER_DELETED
 from newslib.orm import CustomerProvider
+from previewlib import preview, DeploymentPreviewToken, FileAccessToken
+from wsgilib import JSON, XML
+
+from uninews.functions import get_deployment_providers
 
 
 __all__ = ['APPLICATION']
@@ -76,6 +79,20 @@ def delete_customer_provider(ident):
 @preview(DeploymentPreviewToken)
 def preview_deployment(deployment):
     """Returns the news preview for the respective deployment."""
+
+    wanted_providers = get_deployment_providers(deployment)
+    xml = news()
+    sha256sums = set()
+
+    for article in articles(deployment.customer, wanted_providers):
+        article_dom = article.to_dom()
+        xml.article.append(article_dom)
+
+        if article_dom.image:
+            sha256sums.add(article_dom.image.sha256sum)
+
+    headers = FileAccessToken.headers_for_sha256sums(sha256sums)
+    return XML(xml, headers=headers)
 
 
 APPLICATION.add_routes((
