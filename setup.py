@@ -17,6 +17,7 @@ setup(
         'flask',
         'functoolsplus',
         'his',
+        'hwdb',
         'mdb',
         'newslib',
         'previewlib',

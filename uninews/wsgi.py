@@ -3,6 +3,7 @@
 from flask import request
 
 from his import CUSTOMER, authenticated, authorized, root, Application
+from hwdb import Deployment
 from mdb import Customer
 from newslib.dom import news
 from newslib.enumerations import Provider
@@ -14,7 +15,7 @@ from newslib.messages import NO_SUCH_CUSTOMER_PROVIDER
 from newslib.messages import CUSTOMER_PROVIDER_DELETED
 from newslib.orm import CustomerProvider
 from previewlib import preview, DeploymentPreviewToken, FileAccessToken
-from wsgilib import JSON, XML
+from wsgilib import JSON, JSONMessage, XML
 
 from uninews.functions import get_deployment_providers
 
@@ -27,7 +28,7 @@ APPLICATION = Application('news')
 
 @authenticated
 @root
-def list_providers():
+def list_providers() -> JSON:
     """Lists customer providers."""
 
     return JSON([provider.value for provider in Provider])
@@ -35,18 +36,20 @@ def list_providers():
 
 @authenticated
 @authorized('news')
-def list_customer_providers():
+def list_customer_providers() -> JSON:
     """Lists customer providers."""
 
     return JSON([
         customer_provider.to_json() for customer_provider
         in CustomerProvider.select().where(
-            CustomerProvider.customer == CUSTOMER.id)])
+            CustomerProvider.customer == CUSTOMER.id
+        )
+    ])
 
 
 @authenticated
 @root
-def add_customer_provider():
+def add_customer_provider() -> JSONMessage:
     """Adds a new customer provider."""
 
     try:
@@ -64,7 +67,7 @@ def add_customer_provider():
 
 @authenticated
 @root
-def delete_customer_provider(ident):
+def delete_customer_provider(ident: int) -> JSONMessage:
     """Removes the respective customer provider."""
 
     try:
@@ -77,7 +80,7 @@ def delete_customer_provider(ident):
 
 
 @preview(DeploymentPreviewToken)
-def preview_deployment(deployment):
+def preview_deployment(deployment: Deployment) -> XML:
     """Returns the news preview for the respective deployment."""
 
     wanted_providers = get_deployment_providers(deployment)
