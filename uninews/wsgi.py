@@ -28,7 +28,7 @@ APPLICATION = Application('news')
 
 @authenticated
 @root
-def list_providers() -> JSON:
+def _list_providers() -> JSON:
     """Lists customer providers."""
 
     return JSON(list(list_providers()))
@@ -100,7 +100,7 @@ def preview_deployment(deployment: Deployment) -> XML:
 
 
 APPLICATION.add_routes((
-    ('GET', '/providers', list_providers),
+    ('GET', '/providers', _list_providers),
     ('GET', '/customer-providers', list_customer_providers),
     ('POST', '/customer-providers', add_customer_provider),
     ('DELETE', '/customer-providers/<int:ident>', delete_customer_provider),
