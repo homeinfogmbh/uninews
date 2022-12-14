@@ -6,8 +6,8 @@ from his import CUSTOMER, authenticated, authorized, root, Application
 from hwdb import Deployment
 from mdb import Customer
 from newslib.dom import news
-from newslib.enumerations import Provider
 from newslib.filters import articles
+from newslib.functions import list_providers
 from newslib.messages import NO_CUSTOMER_SPECIFIED
 from newslib.messages import NO_SUCH_CUSTOMER
 from newslib.messages import CUSTOMER_PROVIDER_ADDED
@@ -31,7 +31,7 @@ APPLICATION = Application('news')
 def list_providers() -> JSON:
     """Lists customer providers."""
 
-    return JSON([provider.value for provider in Provider])
+    return JSON(list(list_providers()))
 
 
 @authenticated
