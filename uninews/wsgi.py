@@ -20,10 +20,10 @@ from wsgilib import JSON, JSONMessage, XML
 from uninews.functions import get_deployment_providers
 
 
-__all__ = ['APPLICATION']
+__all__ = ["APPLICATION"]
 
 
-APPLICATION = Application('news')
+APPLICATION = Application("news")
 
 
 @authenticated
@@ -35,16 +35,18 @@ def _list_providers() -> JSON:
 
 
 @authenticated
-@authorized('news')
+@authorized("news")
 def list_customer_providers() -> JSON:
     """Lists customer providers."""
 
-    return JSON([
-        customer_provider.to_json() for customer_provider
-        in CustomerProvider.select().where(
-            CustomerProvider.customer == CUSTOMER.id
-        )
-    ])
+    return JSON(
+        [
+            customer_provider.to_json()
+            for customer_provider in CustomerProvider.select().where(
+                CustomerProvider.customer == CUSTOMER.id
+            )
+        ]
+    )
 
 
 @authenticated
@@ -53,14 +55,15 @@ def add_customer_provider() -> JSONMessage:
     """Adds a new customer provider."""
 
     try:
-        customer = Customer[request.json.pop('customer')]
+        customer = Customer[request.json.pop("customer")]
     except (KeyError, TypeError):
         raise NO_CUSTOMER_SPECIFIED
     except Customer.DoesNotExist:
         raise NO_SUCH_CUSTOMER
 
     customer_provider = CustomerProvider.from_json(
-        request.json, customer=customer, unique=True)
+        request.json, customer=customer, unique=True
+    )
     customer_provider.save()
     return CUSTOMER_PROVIDER_ADDED.update(id=customer_provider.id)
 
@@ -99,10 +102,12 @@ def preview_deployment(deployment: Deployment) -> XML:
     return XML(xml)
 
 
-APPLICATION.add_routes((
-    ('GET', '/providers', _list_providers),
-    ('GET', '/customer-providers', list_customer_providers),
-    ('POST', '/customer-providers', add_customer_provider),
-    ('DELETE', '/customer-providers/<int:ident>', delete_customer_provider),
-    ('GET', '/preview', preview_deployment)
-))
+APPLICATION.add_routes(
+    (
+        ("GET", "/providers", _list_providers),
+        ("GET", "/customer-providers", list_customer_providers),
+        ("POST", "/customer-providers", add_customer_provider),
+        ("DELETE", "/customer-providers/<int:ident>", delete_customer_provider),
+        ("GET", "/preview", preview_deployment),
+    )
+)

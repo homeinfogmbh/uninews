@@ -6,7 +6,7 @@ from cmslib.orm.charts import News
 from cmslib.presentation.deployment import Presentation
 
 
-__all__ = ['get_deployment_providers']
+__all__ = ["get_deployment_providers"]
 
 
 @coerce(frozenset)

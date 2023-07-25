@@ -4,4 +4,4 @@ from different sources into a centralized format.
 from uninews.wsgi import APPLICATION
 
 
-__all__ = ['APPLICATION']
+__all__ = ["APPLICATION"]
